@@ -5,6 +5,6 @@ import "@testing-library/jest-dom";
 describe("Button", () => {
 	it("renders the button", () => {
 		render(<Button />);
-		expect(screen.getByText("button")).toBeInTheDocument();
+		expect(screen.getByText("Button")).toBeInTheDocument();
 	});
 });
