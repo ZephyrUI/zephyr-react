@@ -9,15 +9,4 @@ export const GlobalStyle = createGlobalStyle`
 		--tertiary-color-one: #77B1D4;
 		--tertiary-color-two: #517891;
 	}
-
-	*,
-	*::after,
-	*::before {
-		padding: 0;
-		margin: 0;
-		box-sizing: border-box;
-		font-family: Inter, serif;
-		font-weight: 500;
-		font-size: 14px;
-	}
 `;

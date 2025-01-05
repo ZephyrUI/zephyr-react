@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { BaseStyle } from "../../styles/BaseStyle";
 import { GlobalStyle } from "../../styles/GlobalStyle";
 
 export interface ButtonProps {
@@ -19,6 +20,7 @@ export interface ButtonProps {
 }
 
 const StyledButton = styled.button<ButtonProps>`
+  ${BaseStyle}
   ${({ backgroundColor }) => backgroundColor && `background-color: ${backgroundColor};`}
   ${({ width }) => width && `width: ${width}px;`}
   ${({ height }) => height && `height: ${height}px;`}
