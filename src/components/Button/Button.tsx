@@ -1,81 +1,91 @@
 import styled from "styled-components";
 import { BaseStyle } from "../../styles/BaseStyle";
-import { GlobalStyle } from "../../styles/GlobalStyle";
+import { parseStyleProps } from "../../utils/helpers";
 
-export interface ButtonProps {
-	text?: string;
-	borderRadius?: number;
-	borderThickness?: number;
+export interface ButtonStyleProps {
+	borderRadius?: string;
+	borderWidth?: string;
 	borderColor?: string;
 	backgroundColor?: string;
-	padding?: [number, number, number, number]; // [top, right, bottom, left]
-	margin?: number;
-	minWidth?: number;
-	maxWidth?: number;
-	width?: number;
-	height?: number;
-	minHeight?: number;
-	maxHeight?: number;
-	textColor?: string;
+	padding?: [string, string, string, string] | string;
+	margin?: [string, string, string, string] | string;
+	dimensions?: {
+		minWidth?: string;
+		maxWidth?: string;
+		width?: string;
+		height?: string;
+		minHeight?: string;
+		maxHeight?: string;
+	};
+	color?: string;
 }
 
-const StyledButton = styled.button<ButtonProps>`
-  ${BaseStyle}
-  ${({ backgroundColor }) => backgroundColor && `background-color: ${backgroundColor};`}
-  ${({ width }) => width && `width: ${width}px;`}
-  ${({ height }) => height && `height: ${height}px;`}
-  ${({ minWidth }) => minWidth && `min-width: ${minWidth}px;`}
-  ${({ maxWidth }) => maxWidth && `max-width: ${maxWidth}px;`}
-  ${({ minHeight }) => minHeight && `min-height: ${minHeight}px;`}
-  ${({ maxHeight }) => maxHeight && `max-height: ${maxHeight}px;`}
-  ${({ borderRadius }) => borderRadius && `border-radius: ${borderRadius}px;`}
-  ${({ padding }) =>
-		padding &&
-		`padding: ${padding[0]}px ${padding[1]}px ${padding[2]}px ${padding[3]}px;`}
-  ${({ margin }) => margin && `margin: ${margin}px;`}
-  ${({ textColor }) => textColor && `color: ${textColor};`}
+export interface ButtonProps extends ButtonStyleProps {
+	text?: string;
+	isEnabled?: boolean;
+	type?: "button" | "submit" | "reset";
+	onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
 
-  ${({ borderThickness, borderColor }) =>
-		borderThickness && borderColor
-			? `border: ${borderThickness}px solid ${borderColor};`
-			: "border: none;"}
+const DEFAULT_STYLE_PROPS: Required<ButtonStyleProps> = {
+	borderRadius: "8px",
+	borderWidth: "0",
+	borderColor: "transparent",
+	backgroundColor: "#77B1D4",
+	padding: ["8px", "12px", "8px", "12px"],
+	margin: "0",
+	dimensions: {
+		minWidth: "0",
+		maxWidth: "Infinity",
+		width: undefined,
+		height: undefined,
+		minHeight: "0",
+		maxHeight: "Infinity",
+	},
+	color: "white",
+};
+
+const StyledButton = styled.button<{ $styleProps: ButtonStyleProps }>`
+  ${BaseStyle}
+  ${({ $styleProps }) => parseStyleProps($styleProps)}
+  &:hover {
+	background-color: #57B9FF;
+	cursor: pointer;
+  }
+
+  &:active {
+	background-color: #90D5FF;
+  }
+
+  &:disabled {
+	background-color: #D3D3D3;
+	cursor: not-allowed;
+  }
 `;
 
 export function Button({
 	text = "Button",
-	borderRadius = 8,
-	borderThickness = 0,
-	borderColor,
-	backgroundColor = "#77B1D4",
-	padding = [8, 12, 8, 12],
-	margin = 1,
-	minWidth,
-	maxWidth,
-	width,
-	height,
-	minHeight,
-	maxHeight,
-	textColor = "white",
-	...props
+	onClick,
+	isEnabled = true,
+	type = "button",
+	...styleProps
 }: ButtonProps) {
+	const mergedStyleProps = {
+		...DEFAULT_STYLE_PROPS,
+		...styleProps,
+		dimensions: {
+			...DEFAULT_STYLE_PROPS.dimensions,
+			...(styleProps.dimensions || {}),
+		},
+	};
+
 	return (
 		<>
-			<GlobalStyle />
 			<StyledButton
-				borderRadius={borderRadius}
-				borderThickness={borderThickness}
-				borderColor={borderColor}
-				backgroundColor={backgroundColor}
-				padding={padding}
-				margin={margin}
-				minWidth={minWidth}
-				maxWidth={maxWidth}
-				width={width}
-				height={height}
-				minHeight={minHeight}
-				maxHeight={maxHeight}
-				textColor={textColor}
-				{...props}
+				onClick={onClick}
+				$styleProps={mergedStyleProps}
+				type={type}
+				disabled={!isEnabled}
 			>
 				{text}
 			</StyledButton>
